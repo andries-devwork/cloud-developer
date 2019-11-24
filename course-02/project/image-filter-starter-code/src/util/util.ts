@@ -1,5 +1,5 @@
 import fs from 'fs';
-import Jimp = require('jimp');
+import Jimp from 'jimp';
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -12,13 +12,13 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
     return new Promise( async resolve => {
         const photo = await Jimp.read(inputURL);
         const outpath = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
-        await photo
-        .resize(256, 256) // resize
-        .quality(60) // set JPEG quality
-        .greyscale() // set greyscale
-        .write(__dirname+outpath, (img)=>{
-            resolve(__dirname+outpath);
-        });
+        photo
+            .resize(256, 256) // resize
+            .quality(60) // set JPEG quality
+            .greyscale() // set greyscale
+            .write(__dirname + outpath, (img) => {
+                resolve(__dirname + outpath);
+            });
     });
 }
 
@@ -32,3 +32,20 @@ export async function deleteLocalFiles(files:Array<string>){
         fs.unlinkSync(file);
     }
 }
+
+// validURL
+// helper function that checks whether a given url is valid
+// INPUTS
+//  str: Candidate url string
+// RETURNS
+//  a boolean true if the string looks like a valid URL
+export function validURL(str:string) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+  }
+  

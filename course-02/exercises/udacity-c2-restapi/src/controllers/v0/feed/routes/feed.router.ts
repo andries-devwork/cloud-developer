@@ -45,7 +45,7 @@ router.patch('/:id',
     async (req: Request, res: Response) => {
         const caption = req.body.caption;
         const fileName = req.body.url;
-        const { id } = req.params;
+        const id:number = parseInt(req.params.id,10);
 
         if (!id || !Number.isInteger(id)) {
             return res.status(400).send(`To patch a specific item, an integer id is required`)
