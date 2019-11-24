@@ -15,13 +15,13 @@ async function generatePassword(plainTextPassword: string): Promise<string> {
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(plainTextPassword, salt);
+    return hash;
+}
 
-    return new Promise(res => hash);
-}
 async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
-    const result = bcrypt.compare(plainTextPassword, hash);
-    return new Promise(res => result);
+    return await bcrypt.compare(plainTextPassword, hash);
 }
+
 function generateJWT(user: User): string {
     return jwt.sign(user, config.jwt.secret)
 }
@@ -56,6 +56,7 @@ router.get('/verification',
 router.post('/login', async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
+    
     // check email is valid
     if (!email || !EmailValidator.validate(email)) {
         return res.status(400).send({ auth: false, message: 'Email is required or malformed' });
@@ -89,9 +90,10 @@ router.post('/login', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
     const email = req.body.email;
     const plainTextPassword = req.body.password;
+
     // check email is valid
     if (!email || !EmailValidator.validate(email)) {
-        return res.status(400).send({ auth: false, message: 'Email is required or malformed' });
+        return res.status(400).send({ auth: false, message: `Email is required or malformed: ${email}` });
     }
 
     // check email password valid
@@ -101,14 +103,14 @@ router.post('/', async (req: Request, res: Response) => {
 
     // find the user
     const user = await User.findByPk(email);
-    // check that user doesnt exists
+    // check that user doesn't exists
     if(user) {
         return res.status(422).send({ auth: false, message: 'User may already exist' });
     }
 
     const password_hash = await generatePassword(plainTextPassword);
 
-    const newUser = await new User({
+    const newUser = new User({
         email: email,
         password_hash: password_hash
     });

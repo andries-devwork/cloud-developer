@@ -1,12 +1,27 @@
 {
 	"info": {
-		"_postman_id": "4bcf1909-8996-44b7-be35-b130ab03d12f",
+		"_postman_id": "9dde580e-4250-4af5-a8a5-b329225ddb20",
 		"name": "cloud-cdnd-c2-final",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+			"name": "/filteredimage valid url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ed0804b-536e-499e-baef-df79ad8cd822",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -23,9 +38,122 @@
 						{
 							"key": "image_url",
 							"value": "https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg"
+						},
+						{
+							"key": "image_url",
+							"value": "not_a_url",
+							"disabled": true
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "/filteredimage invalid url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "967e48f3-e6a4-4314-ab04-13bdbc5bae43",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}/filteredimage?image_url=not_a_url",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+							"disabled": true
+						},
+						{
+							"key": "image_url",
+							"value": "not_a_url"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/ (Root Endpoint)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "71b25cb8-5058-4d0d-a780-0a9601cc8c19",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					]
+				},
+				"description": "Just ping to root endpoint to see if the server is alive."
+			},
+			"response": []
+		},
+		{
+			"name": "/filteredimage (blank)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94f8f5c9-83bd-4308-8b70-634c84357870",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}/filteredimage",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					]
+				},
+				"description": "The filtered image endpoint. See if it can be reached."
 			},
 			"response": []
 		}
@@ -54,10 +182,23 @@
 	],
 	"variable": [
 		{
-			"id": "1df3d31a-de30-494b-a3d0-f1228dd8713c",
+			"id": "f367cf23-e689-436f-a1f9-ed3d4a1c949a",
 			"key": "HOST",
+			"value": "{{host_local}}",
+			"type": "string"
+		},
+		{
+			"id": "c8df45dd-c39b-4dac-81ff-ec7eea43e075",
+			"key": "host_public",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "8cfeaccb-525c-498c-8291-f2514d40f07e",
+			"key": "host_local",
 			"value": "localhost:8082",
 			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
