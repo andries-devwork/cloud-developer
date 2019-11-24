@@ -19,9 +19,8 @@ router.get('/',
     const url = req.query.image_url
     let localFiles = new Array<string>();
     
-    console.log(validURL(url), url);
     if (!validURL(url)) {
-        res.status(422).send('An image url is required as a query parameter: image_url')
+        return res.status(422).send(`An image url is required as a query parameter: ${url}`)
     }
 
     let filteredImagePath = await filterImageFromURL(url);
