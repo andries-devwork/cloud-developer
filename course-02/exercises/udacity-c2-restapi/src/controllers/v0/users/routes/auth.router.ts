@@ -17,6 +17,7 @@ async function generatePassword(plainTextPassword: string): Promise<string> {
     const hash = await bcrypt.hash(plainTextPassword, salt);
     return hash;
 }
+
 async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(plainTextPassword, hash);
 }
@@ -26,8 +27,6 @@ function generateJWT(user: User): string {
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
-    // return next();
-
     if (!req.headers || !req.headers.authorization){
         return res.status(401).send({ message: 'No authorization headers.' });
     }

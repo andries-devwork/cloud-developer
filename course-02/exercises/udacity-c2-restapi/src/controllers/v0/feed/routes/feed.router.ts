@@ -22,8 +22,7 @@ router.get('/',
 router.get('/:id', 
     requireAuth, 
     async (req: Request, res: Response) => {
-    let id:number = parseInt(req.params.id, 10);
-    
+    let id:number = parseInt(req.params.id, 10);    
     if (!id || !Number.isInteger(id)) {
         return res.status(400).send(`To retrieve a specific item, an integer id is required`)
     }
@@ -36,7 +35,6 @@ router.get('/:id',
     else {
         res.status(404).send(`Could not find id ( ${id} )`);
     }
-    
 });
 
 // update a specific resource
@@ -46,7 +44,7 @@ router.patch('/:id',
         const caption = req.body.caption;
         const fileName = req.body.url;
         const id:number = parseInt(req.params.id,10);
-
+  
         if (!id || !Number.isInteger(id)) {
             return res.status(400).send(`To patch a specific item, an integer id is required`)
         }
