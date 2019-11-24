@@ -34,7 +34,8 @@ export async function deleteLocalFiles(files:Array<string>){
 }
 
 // validURL
-// helper function that checks whether a given url is valid
+// helper function that checks whether a given url is valid.
+// Credit: Borrowed from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url/43467144
 // INPUTS
 //  str: Candidate url string
 // RETURNS
