@@ -17,6 +17,6 @@ export const config = {
     "dialect": "postgres"
   },
   "jwt": {
-    "secret":"helloworldrandomtext"
+    "secret": process.env.JWT_SECRET
   }
 }

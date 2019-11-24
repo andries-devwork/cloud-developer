@@ -15,18 +15,19 @@ async function generatePassword(plainTextPassword: string): Promise<string> {
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(plainTextPassword, salt);
-
-    return new Promise(res => hash);
+    return hash;
 }
 async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
-    const result = bcrypt.compare(plainTextPassword, hash);
-    return new Promise(res => result);
+    return await bcrypt.compare(plainTextPassword, hash);
 }
+
 function generateJWT(user: User): string {
     return jwt.sign(user, config.jwt.secret)
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
+    // return next();
+
     if (!req.headers || !req.headers.authorization){
         return res.status(401).send({ message: 'No authorization headers.' });
     }
@@ -56,6 +57,7 @@ router.get('/verification',
 router.post('/login', async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
+    
     // check email is valid
     if (!email || !EmailValidator.validate(email)) {
         return res.status(400).send({ auth: false, message: 'Email is required or malformed' });
@@ -89,9 +91,10 @@ router.post('/login', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
     const email = req.body.email;
     const plainTextPassword = req.body.password;
+
     // check email is valid
     if (!email || !EmailValidator.validate(email)) {
-        return res.status(400).send({ auth: false, message: 'Email is required or malformed' });
+        return res.status(400).send({ auth: false, message: `Email is required or malformed: ${email}` });
     }
 
     // check email password valid
@@ -108,7 +111,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     const password_hash = await generatePassword(plainTextPassword);
 
-    const newUser = await new User({
+    const newUser = new User({
         email: email,
         password_hash: password_hash
     });
